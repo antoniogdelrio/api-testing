@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const mongoose = require('mongoose');
 
 exports.get_users = (req,res,next) => {
     User.find()

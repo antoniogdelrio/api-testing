@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./api/app"
+    "test": "set NODE_ENV=test && mocha --timeout 10000",
+    "start": "set NODE_ENV=development && nodemon ./api/app"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,10 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^7.0.1",
+    "nodemon": "^2.0.2",
+    "should": "^13.2.3"
   }
 }

@@ -3,14 +3,20 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
-const usersRouter = require('./routes/products');
-const productsRouter = require('./routes/user');
+const usersRouter = require('./routes/user');
+const productsRouter = require('./routes/products');
+
 require('dotenv').config();
 
 const app = express();
 const port = 3333;
 
-const dbName = process.env.DB_NAME;
+const env = process.env.NODE_ENV;
+let envString = env.toUpperCase()
+envString = envString.slice(0,envString.length-1);
+
+const dbName = process.env['DB_NAME_' + envString]
+console.log(dbName);
 const dbUserName = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
 
@@ -45,4 +51,7 @@ app.use((error,req,res,next) => {
 
 app.listen(port, (req,res)=>{
     console.log("App rodando na porta 3333");
+    console.log(process.env.NODE_ENV);
 })
+
+module.exports = app;
