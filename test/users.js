@@ -49,5 +49,31 @@ describe('Users', ()=>{
                     done();
                 })
         })
+        it('send empty object return error', (done) => {
+            chai.request(app)
+                .post('/users')
+                .send({})
+                .end((err, res) => {
+                    expect(res).have.property('status', 404);
+                    expect(res.body).is.an('object');
+                    expect(res.body).have.property('error');
+                    expect(res.body.error).have.property('message')
+                    done();
+                })
+        })
+        it('send object without valid parameters return error', (done) => {
+            chai.request(app)
+                .post('/users')
+                .send({
+                    "invalidParameter": "value"
+                })
+                .end((err, res) => {
+                    expect(res).have.property('status', 404);
+                    expect(res.body).is.an('object');
+                    expect(res.body).have.property('error');
+                    expect(res.body.error).have.property('message')
+                    done();
+                })
+        })
     })
 })
