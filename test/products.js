@@ -1,6 +1,8 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../api/app');
+const mongoose = require('mongoose');
+const Product = require('../api/models/product');
 
 const expect = chai.expect;
 
@@ -12,7 +14,6 @@ describe('Products', () => {
             chai.request(app)
                 .get('/products')
                 .end((err, res) => {
-                    console.log('o erro', err);
                     expect(res).to.have.property('status', 200);
                     done();
                 })
@@ -67,7 +68,7 @@ describe('Products', () => {
         })
         it('send object without valid parameters return error', (done) => {
             chai.request(app)
-                .post('/users')
+                .post('/products')
                 .send({
                     "invalidParameterOne": "value",
                     "invalidParameterTwo": "value"
@@ -77,6 +78,49 @@ describe('Products', () => {
                     expect(res.body).is.an('object');
                     expect(res.body).have.property('error');
                     expect(res.body.error).have.property('message')
+                    done();
+                })
+        })
+    })
+
+    describe('/GET/:id Product', () => {
+        it('Status 200 get a product by given id', (done) => {
+            const product = new Product({
+                "name": "Shoe",
+                "price": 50.00,
+                "_id": mongoose.Types.ObjectId()
+            })
+            product.save((err, product) => {
+                chai.request(app)
+                    .get('/products/' + product._id)
+                    .end((err, res) => {
+                        expect(res).have.property('status', 200);
+                        done();
+                    })
+            })
+        })
+        it('req.body is an array length 1', (done) => {
+            const product = new Product({
+                "name": "Shoe",
+                "price": 50.00,
+                "_id": mongoose.Types.ObjectId()
+            })
+            product.save((err, product) => {
+                chai.request(app)
+                    .get('/products/' + product._id)
+                    .end((err, res) => {
+                        expect(res.body).is.an('array');
+                        expect(res.body.length).to.equal(1);
+                        done();
+                    })
+            })
+        })
+        it('invalid id return error', (done) => {
+            chai.request(app)
+                .get('/products/' + 'invalidID')
+                .end((err, res) => {
+                    expect(res.body).is.an('object');
+                    expect(res.body).have.property('error');
                     done();
                 })
         })

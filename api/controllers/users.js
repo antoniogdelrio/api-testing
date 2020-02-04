@@ -14,6 +14,23 @@ exports.get_users = (req,res,next) => {
         })
 }
 
+exports.get_one_user = (req, res, next) => {
+    const id = req.params.id;
+    User.find({_id: id})
+        .exec()
+        .then(result => {
+            if(result.length === 0){
+                throw "User not found";
+            }
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            return res.status(404).json({
+                error: err
+            })
+        })
+}
+
 exports.post_user = (req,res,next)=>{
     const user = new User({
        userName: req.body.userName,
